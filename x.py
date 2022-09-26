@@ -8,7 +8,7 @@ for i in range(1,len(x)) :
 
     entries[i]=x[i][0].split("\\")[-1]
     
-print(entries)
+# print(entries)
 def makeDefaultHiddenLayers(inputs):
         cnn = tf.keras.layers.Conv2D(16, (3, 3), padding="same",activation="relu")(inputs)
         # cnn = tf.keras.layers.core.Activation("relu")(cnn)
@@ -44,4 +44,17 @@ def assemble(width,height,class_dict):
     return model
 
 X=assemble(303, 404,50)
-print(X.output_shape)
+# print(X.output_shape)
+dataset = tf.keras.utils.image_dataset_from_directory(
+    directory='data/',
+    labels='inferred',
+    label_mode='categorical',
+    batch_size=32,
+    image_size=(404, 303),
+    shuffle=True,
+    seed=123,
+    validation_split=0.2,
+    subset="both")
+
+X.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = ['accuracy'])
+X.fit(x = dataset[0], validation_data = dataset[1], epochs = 25)
